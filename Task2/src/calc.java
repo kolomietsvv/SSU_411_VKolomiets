@@ -74,30 +74,33 @@ public class calc {
     }
 
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        StringBuilder input = new StringBuilder(in.nextLine());
-        StringBuilder test = new StringBuilder(input);
-
-        Matcher t = Pattern.compile("\\(\\-?\\d+\\.?\\d*[\\-\\+\\*\\^/]\\d+\\.?\\d*([\\-\\+\\*\\^/]\\d+\\.?\\d*)*\\)").matcher(test);
-        while (t.find(0)) {
-            test.replace(t.start(), t.end(), "0.5");
-        }
-
-        t = Pattern.compile("\\-?\\d+\\.?\\d*[\\-\\+\\*\\^/]\\d+\\.?\\d*([\\-\\+\\*\\^/]\\d+\\.?\\d*)*" +
-                "|\\(\\-?\\d+\\.?\\d*[\\-\\+\\*\\^/]\\d+\\.?\\d*([\\-\\+\\*\\^/]\\d+\\.?\\d*)*\\)").matcher(test);
-        if (t.find()) {
-            Matcher m = Pattern.compile("\\([^\\(\\)]+\\)").matcher(input);
-            StringBuilder todo = new StringBuilder();
-            StringBuilder group = new StringBuilder();
-            while (m.find(0)) {
-                group.replace(0, group.length(), m.group());
-                todo.replace(0, todo.length(), group.substring(1, group.length() - 1));
-                input = input.replace(m.start(), m.end(), simplCalc(todo));
-                System.out.println(input);
-                m.reset(input);
+        while(true) {
+            Scanner in = new Scanner(System.in);
+            System.out.println("Enter arithmetic expression");
+            StringBuilder input = new StringBuilder(in.nextLine());
+            if(input.toString().equals("q"))
+                return;
+            StringBuilder test = new StringBuilder(input);
+            Matcher t = Pattern.compile("\\(\\-?\\d+\\.?\\d*[\\-\\+\\*\\^/]\\d+\\.?\\d*([\\-\\+\\*\\^/]\\d+\\.?\\d*)*\\)").matcher(test);
+            while (t.find(0)) {
+                test.replace(t.start(), t.end(), "0.5");
             }
-            if (!input.equals("Деление на 0!"))
-                System.out.println(simplCalc(input));
-        } else System.out.println("Ошибка при вводе выражения!");
+            t = Pattern.compile("\\-?\\d+\\.?\\d*[\\-\\+\\*\\^/]\\d+\\.?\\d*([\\-\\+\\*\\^/]\\d+\\.?\\d*)*" +
+                    "|\\(\\-?\\d+\\.?\\d*[\\-\\+\\*\\^/]\\d+\\.?\\d*([\\-\\+\\*\\^/]\\d+\\.?\\d*)*\\)").matcher(test);
+            if (t.find()) {
+                Matcher m = Pattern.compile("\\([^\\(\\)]+\\)").matcher(input);
+                StringBuilder todo = new StringBuilder();
+                StringBuilder group = new StringBuilder();
+                while (m.find(0)) {
+                    group.replace(0, group.length(), m.group());
+                    todo.replace(0, todo.length(), group.substring(1, group.length() - 1));
+                    input = input.replace(m.start(), m.end(), simplCalc(todo));
+                    System.out.println(input);
+                    m.reset(input);
+                }
+                if (!input.equals("Деление на 0!"))
+                    System.out.println(simplCalc(input));
+            } else System.out.println("Ошибка при вводе выражения!");
+        }
     }
 }
