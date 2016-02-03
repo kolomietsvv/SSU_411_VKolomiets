@@ -1,8 +1,11 @@
+import sun.java2d.pipe.SpanShapeRenderer;
+
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.logging.SimpleFormatter;
 
 
 /**
@@ -21,6 +24,7 @@ public class Solution {
 
         try {
             BufferedReader r = new BufferedReader(new FileReader(fileName));
+            r.readLine();
             while ((line = r.readLine()) != null) {
                 content = line.split(";");
                 businessAcc = Integer.valueOf(content[1]);
@@ -38,6 +42,7 @@ public class Solution {
                 try {
                     BufferedReader r = new BufferedReader(new FileReader(fileName));
                     lineNum = 1;
+                    r.readLine();
                     while ((line = r.readLine()) != null) {
                         content = line.split(";");
                         businessAcc = Integer.valueOf(content[1]);
@@ -50,7 +55,7 @@ public class Solution {
                                 if (remitter.debitFunds(funds)) {
                                     remittee.depositFunds(funds);
                                     System.out.println(fileName + " строка " + lineNum + ". Осуществлён перевод"
-                                            + ". Получатель: " + content[0] + ". Отправитель: " + content[2] + ". Сумма: " + content[4]);
+                                            + ". Отправитель: " + content[0] + ". Получатель: " + content[2] + ". Сумма: " + content[4]);
                                 } else
                                     System.out.println(fileName + " строка " + lineNum + ". Недостаточно средств для перевода");
                             } else System.out.println(fileName + " строка " + lineNum + ". Получатель не существует");
@@ -65,12 +70,16 @@ public class Solution {
         }
 
         DecimalFormat df = new DecimalFormat("#########.##");
+        DecimalFormat intf = new DecimalFormat("00000");
+
         fileName = "Sources\\result.csv";
         BufferedWriter w = new BufferedWriter(new FileWriter(fileName));
         w.write("");
+        w.append("Имя компании;Рассчётный счёт;Бюджет\n");
+        System.out.println("\nResult");
         for (Company company : companies.values()) {
             System.out.println(company.getName() + ";" + company.getBusinessAccount() + ";" + df.format(company.getBudget()));
-            w.append(company.getName() + ";" + company.getBusinessAccount() + ";" + df.format(company.getBudget()) + "\n");
+            w.append(company.getName() + ";" + intf.format(company.getBusinessAccount()) + ";" + df.format(company.getBudget()) + "\n");
         }
         w.close();
     }
